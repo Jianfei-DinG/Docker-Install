@@ -21,7 +21,7 @@ sudo curl -fsSL https://github.com/Joshua-DinG/Docker-Install/releases/download/
 
 直接官方安装
 ```
-curl -fsSL https://get.docker.com | sh -s docker --mirror Aliyun && ln -s /usr/libexec/docker/cli-plugins/docker-compose /usr/local/bin/docker-compose && docker --version && docker-compose --version
+sudo curl -fsSL https://get.docker.com | sh -s docker --mirror Aliyun && sudo ln -s /usr/libexec/docker/cli-plugins/docker-compose /usr/local/bin/docker-compose && docker --version && docker-compose --version
 ```
 
 > 备用（如果Github访问不了，可以使用Gitee的链接）<br>
