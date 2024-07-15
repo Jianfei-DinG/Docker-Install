@@ -19,6 +19,11 @@ B站，抖音，Youtube全网同名，转载请注明作者<br>
 sudo curl -fsSL https://github.com/Joshua-DinG/Docker-Install/releases/download/latest/linux.sh| bash -s docker --mirror Aliyun
 ```
 
+直接官方安装
+```
+curl -fsSL https://get.docker.com | sh -s docker --mirror Aliyun && ln -s /usr/libexec/docker/cli-plugins/docker-compose /usr/local/bin/docker-compose && docker --version && docker-compose --version
+```
+
 > 备用（如果Github访问不了，可以使用Gitee的链接）<br>
 ```
 sudo curl -fsSL https://gitee.com/tech-shrimp/docker_installer/releases/download/latest/linux.sh| bash -s docker --mirror Aliyun
