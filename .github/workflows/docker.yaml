@@ -27,7 +27,9 @@ jobs:
 
     - name: Move linux.sh to accelerate directory
       run: mv linux.sh accelerate/
-
+           ls -l accelerate/
+           pwd
+           
     - name: Release
       uses: softprops/action-gh-release@v2
       with:
