@@ -35,7 +35,13 @@ jobs:
           pwd
           tree -L 3
           tree -L 3 /home/runner/work/
-           
+          
+    - name: Upload artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: my-artifact
+        path: accelerate/linux.sh
+        
     - name: Release
       uses: softprops/action-gh-release@v2
       with:
