@@ -37,7 +37,7 @@ jobs:
           tree -L 3 /home/runner/work/
           
     - name: Upload artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: my-artifact
         path: accelerate/linux.sh
