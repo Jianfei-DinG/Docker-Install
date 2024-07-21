@@ -30,7 +30,7 @@ jobs:
 
     - name: Move linux.sh to accelerate directory
       run: |
-          mv linux.sh accelerate/
+          cp linux.sh accelerate/
           ls -l accelerate/
           pwd
           tree 
