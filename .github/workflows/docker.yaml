@@ -36,11 +36,19 @@ jobs:
           tree 
           tree  /home/runner/work/
           
-    - name: Upload artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: my-artifact
-        path: accelerate/linux.sh
+    # - name: Upload artifact
+    #   uses: actions/upload-artifact@v4
+    #   with:
+    #     name: my-artifact
+    #     path: accelerate/linux.sh
+
+    - name: Commit changes
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add accelerate/linux.sh
+        git commit -m "Move linux.sh to accelerate directory"
+        git push
         
     - name: Release
       uses: softprops/action-gh-release@v2
