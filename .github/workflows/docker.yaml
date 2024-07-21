@@ -43,7 +43,7 @@ jobs:
         TIMESTAMP=$(date '+%Y-%m-%d %H:%M:%S')
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
-        git add accelerate/linux.sh
+        git add -f accelerate/linux.sh
         git commit -m "$TIMESTAMP"
         git push
        
