@@ -13,9 +13,14 @@
 ## 1.1 Linux
 一键安装命令（每天自动从官网定时同步）
 ```
-sudo curl -fsSL https://github.com/Joshua-DinG/Docker-Install/releases/download/latest/linux.sh| bash -s docker --mirror Aliyun
+sudo curl -fsSL https://github.com/Joshua-DinG/Docker-Install/releases/download/latest/linux.sh | bash -s docker --mirror Aliyun
+```
+CDN
+```
+sudo curl -fsSL https://testingcf.jsdelivr.net/gh/Joshua-DinG/Docker-Install@main/accelerate/linux.sh | bash -s docker --mirror Aliyun
 ```
 
+```
 直接官方安装
 ```
 sudo curl -fsSL https://get.docker.com | sh -s docker --mirror Aliyun && sudo ln -s /usr/libexec/docker/cli-plugins/docker-compose /usr/local/bin/docker-compose && docker --version && docker-compose --version
