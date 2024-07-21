@@ -33,13 +33,9 @@ jobs:
          curl -o docker_desktop_installer_linux_debian_x84_64.dmg "https://desktop.docker.com/linux/main/amd64/149282/docker-desktop-4.30.0-amd64.deb"
          curl -o docker_desktop_installer_linux_fedora_x84_64.dmg "https://desktop.docker.com/linux/main/amd64/149282/docker-desktop-4.30.0-x86_64.rpm"
      
-    - name: Install tree command
-      run: sudo apt-get update && sudo apt-get install -y tree
-
-    - name: Move linux.sh to accelerate directory
-      run: |
-          cp -f linux.sh accelerate/
-          
+    # - name: Install tree command
+    #   run: sudo apt-get update && sudo apt-get install -y tree
+         
     # - name: Upload artifact
     #   uses: actions/upload-artifact@v4
     #   with:
@@ -51,7 +47,6 @@ jobs:
         TIMESTAMP=$(date '+%Y-%m-%d %H:%M:%S')
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
-        rm accelerate/linux.sh 
         cp -f linux.sh accelerate/
         git add -f accelerate/linux.sh
         git commit -m "$TIMESTAMP"
