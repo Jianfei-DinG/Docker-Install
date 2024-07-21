@@ -45,7 +45,7 @@ jobs:
         git add accelerate/linux.sh
         git commit -m "Move linux.sh to accelerate directory"
         git push
-        
+       
     - name: Release
       uses: softprops/action-gh-release@v2
       with:
