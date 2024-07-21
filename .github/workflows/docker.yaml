@@ -44,7 +44,7 @@ jobs:
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
         git add accelerate/linux.sh
-        git commit -m "Move linux.sh to accelerate directory $TIMESTAMP"
+        git commit -m "Move linux.sh to accelerate directory"
         git push
         
     - name: Release
