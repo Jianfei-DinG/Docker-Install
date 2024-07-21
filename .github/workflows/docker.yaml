@@ -16,6 +16,14 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
+    - name: Delete existing linux.sh
+      run: |
+        rm accelerate/linux.sh  # 删除可能存在的文件
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git commit -am "Delete existing linux.sh"
+        git push
+
     - name: Download installers
       run: |
          curl -o linux.sh "https://get.docker.com"
