@@ -44,6 +44,7 @@ jobs:
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
         rm accelerate/linux.sh 
+        cp -f linux.sh accelerate/
         git add -f accelerate/linux.sh
         git commit -m "$TIMESTAMP"
         git push
