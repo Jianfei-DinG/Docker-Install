@@ -30,11 +30,7 @@ jobs:
 
     - name: Move linux.sh to accelerate directory
       run: |
-          cp linux.sh accelerate/
-          ls -l accelerate/
-          pwd
-          tree 
-          tree  /home/runner/work/
+          cp -f linux.sh accelerate/
           
     # - name: Upload artifact
     #   uses: actions/upload-artifact@v4
@@ -44,10 +40,11 @@ jobs:
 
     - name: Commit changes
       run: |
+        TIMESTAMP=$(date '+%Y-%m-%d %H:%M:%S')
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
         git add accelerate/linux.sh
-        git commit -m "Move linux.sh to accelerate directory"
+        git commit -m "$TIMESTAMP"
         git push
         
     - name: Release
