@@ -18,6 +18,10 @@ sudo curl -fsSL https://github.com/Joshua-DinG/Docker-Install/releases/download/
 
 CDN
 ```
+bash <(curl -Ls https://cdn.jsdelivr.net/gh/Joshua-DinG/Docker-Install@main/accelerate/install_docker.sh)
+```
+
+```
 sudo curl -fsSL https://testingcf.jsdelivr.net/gh/Joshua-DinG/Docker-Install@main/accelerate/linux.sh | bash -s docker --mirror Aliyun
 ```
 
