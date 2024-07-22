@@ -44,6 +44,7 @@ jobs:
 
     - name: Commit changes
       run: |
+        export TZ="Asia/Shanghai"
         TIMESTAMP=$(date '+%Y-%m-%d %H:%M:%S')
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
