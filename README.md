@@ -18,7 +18,7 @@ sudo curl -fsSL https://github.com/Joshua-DinG/Docker-Install/releases/download/
 
 CDN
 ```
-bash <(curl -Ls https://cdn.jsdelivr.net/gh/Joshua-DinG/Docker-Install@main/accelerate/install_docker.sh)
+bash <(curl -Ls https://testingcf.jsdelivr.net/gh/Joshua-DinG/Docker-Install@main/install_docker.sh)
 ```
 
 ```
