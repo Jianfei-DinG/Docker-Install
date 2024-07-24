@@ -23,11 +23,14 @@ RUN set -eu && \
         tree \
         nano \
         iproute2 \
-        iputils
+        iputils \
+        tar
 
-# 复制宿主机上的 /etc/nginx 到镜像中的 /etc/nginx
-COPY ./nginx /etc/nginx    
+# 复制 tar 文件到容器中
+COPY ./docker/nginx_configs.tar /etc/nginx/
 
+# 解压缩 tar 文件到 /etc/nginx 目录中，并删除 tar 文件
+RUN tar -xvf /etc/nginx/nginx_configs.tar -C /etc/nginx/ && rm /etc/nginx/nginx_configs.tar
 
 # 暴露nginx的默认HTTP端口
 EXPOSE 80
