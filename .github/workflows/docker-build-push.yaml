@@ -31,7 +31,7 @@ jobs:
           tree
 
       - name: Build Docker image
-        run: docker build -f ./Docker-Install/docker/dockerfile_frp -t ${{ secrets.DOCKER_USERNAME }}/frp:latest .
+        run: docker build -f ./docker/dockerfile_frp -t ${{ secrets.DOCKER_USERNAME }}/frp:latest .
 
       - name: Push Docker image
         run: docker push ${{ secrets.DOCKER_USERNAME }}/frp:latest
