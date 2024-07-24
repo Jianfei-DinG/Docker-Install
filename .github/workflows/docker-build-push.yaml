@@ -31,5 +31,5 @@ jobs:
         run: docker push ${{ secrets.DOCKER_USERNAME }}/frp:latest
 
   build-nginx:  # 下面是nginx-mod-stream
-    uses: ./.github/workflows/build-and-push-nginx.yml
+    uses: ./.github/workflows/.build-and-push-nginx.yml
     secrets: inherit
