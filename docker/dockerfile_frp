@@ -10,15 +10,15 @@ RUN set -eu && \
     apk del tzdata
 
 # 覆盖 /etc/apk/repositories 文件内容
-RUN echo "http://mirrors.nju.edu.cn/alpine/latest-stable/main" | tee /etc/apk/repositories && \
-    echo "http://mirrors.nju.edu.cn/alpine/edge/community" | tee -a /etc/apk/repositories 
+RUN echo "http://dl-cdn.alpinelinux.org/alpine/latest-stable/main" | tee /etc/apk/repositories && \
+    echo "http://dl-cdn.alpinelinux.org/alpine/edge/community" | tee -a /etc/apk/repositories 
 
 # 安装 frps
-RUN set -eux \
-    apk update \
+RUN set -eux && \
+    apk update && \
     apk add --no-cache frp
 
 WORKDIR /
 
 # 指定启动命令
-CMD ["frps", "-c", "/etc/frp/frps.toml"]
+CMD ["frps"]
