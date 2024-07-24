@@ -32,4 +32,5 @@ jobs:
 
   build-nginx:  # 下面是nginx-mod-stream
     uses: ./.github/workflows/.build-and-push-nginx.yml
+    needs: build
     secrets: inherit
