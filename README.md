@@ -15,6 +15,10 @@
 ```
 sudo curl -fsSL https://github.com/Joshua-DinG/Docker-Install/releases/download/latest/linux.sh | bash -s docker --mirror Aliyun
 ```
+添加加速镜像
+```
+bash <(curl -Ls https://testingcf.jsdelivr.net/gh/Joshua-DinG/Docker-Install@main/accelerate_images.sh)
+```
 
 CDN
 ```
