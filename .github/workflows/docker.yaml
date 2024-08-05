@@ -3,7 +3,7 @@ name: Docker Installer Download
 on:
   workflow_dispatch:
   schedule:
-    - cron: '00 23 * * *'
+    - cron: '0 0 */3 * *' # 每周一0点执行
 
 permissions:
   contents: write
