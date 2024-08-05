@@ -1,6 +1,7 @@
 name: Build and Push Docker Image
 
 on:
+  workflow_dispatch: 
   schedule:
     - cron: '0 0 * * 1' # 每周一0点执行
    # - cron: '0 * * * *' # 每小时0分钟执行一次
