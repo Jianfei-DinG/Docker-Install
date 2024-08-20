@@ -25,8 +25,12 @@ rotate_log() {
 cleanup() {
     echo "$(date) - 清理并退出" >> "$LOG_FILE"
     while read -r pid config; do
-        kill "$pid" 2>/dev/null
-        echo "$(date) - 已停止 PID 是 $pid 的 xray 进程, 配置文件为 $config" >> "$LOG_FILE"
+        if ps -p "$pid" > /dev/null; then
+            kill "$pid" 2>/dev/null
+            echo "$(date) - 已停止 PID 是 $pid 的 xray 进程, 配置文件为 $config" >> "$LOG_FILE"
+        else
+            echo "$(date) - PID $pid 不存在" >> "$LOG_FILE"
+        fi
     done < "$PID_FILE"
     rm -f "$PID_FILE"
     exit 0
@@ -39,31 +43,51 @@ trap cleanup SIGINT SIGTERM
 start_xray() {
     local config_file="$1"
     echo "$(date) - 正在启动 xray, 配置文件为: $config_file" >> $LOG_FILE
-    $XRAY_EXEC -config "$config_file" >> $LOG_FILE 2>&1 &
-    local pid=$!
-    sleep 2  # 等待进程启动
-    if ps -p $pid > /dev/null; then
-        echo "$(date) - xray 已成功启动, PID 为 $pid 配置文件为 $config_file" >> $LOG_FILE
-        echo "$pid $(basename "$config_file")" >> "$PID_FILE"
+
+    # 等待文件稳定
+    sleep 5  # 等待 5 秒
+
+    # 检查文件是否稳定
+    local initial_size=$(stat -c%s "$config_file")
+    sleep 1
+    local new_size=$(stat -c%s "$config_file")
+
+    if [ "$initial_size" -eq "$new_size" ]; then
+        $XRAY_EXEC -config "$config_file" >> $LOG_FILE 2>&1 &
+        local pid=$!
+        sleep 2  # 等待进程启动
+        if pgrep -f "$XRAY_EXEC -config $config_file" > /dev/null; then
+            echo "$(date) - xray 已成功启动, PID 为 $pid 配置文件为 $config_file" >> $LOG_FILE
+            echo "$pid $(basename "$config_file")" >> "$PID_FILE"
+        else
+            echo "$(date) - 无法启动 xray, 配置文件为 $config_file" >> $LOG_FILE
+        fi
     else
-        echo "$(date) - 无法启动 xray, 配置文件为 $config_file" >> $LOG_FILE
+        echo "$(date) - 文件 $config_file 尚未完全写入" >> $LOG_FILE
     fi
+
     rotate_log
 }
 
 # 函数：停止 xray 进程
 stop_xray() {
     local config_name="$1"
-    local pid=$(grep " $config_name" "$PID_FILE" | awk '{print $1}')
-    if [ -n "$pid" ]; then
-        echo "$(date) - 正在停止 PID 为 $pid  的 xray 进程, 配置文件为 $config_name" >> $LOG_FILE
-        kill "$pid"
-        if [ $? -eq 0 ]; then
-            echo "$(date) - xray 已成功停止, PID 为 $pid, 配置文件为 $config_name" >> $LOG_FILE
-            sed -i "/ $config_name/d" "$PID_FILE"
-        else
-            echo "$(date) - 无法停止 PID 为 $pid 的 xray 进程, 配置文件为 $config_name" >> $LOG_FILE
-        fi
+    local pids=$(grep " $config_name" "$PID_FILE" | awk '{print $1}')
+    if [ -n "$pids" ]; then
+        for pid in $pids; do
+            if ps -p $pid > /dev/null; then
+                echo "$(date) - 正在停止 PID 为 $pid 的 xray 进程, 配置文件为 $config_name" >> $LOG_FILE
+                kill "$pid" 2>/dev/null
+                if [ $? -eq 0 ]; then
+                    echo "$(date) - xray 已成功停止, PID 为 $pid, 配置文件为 $config_name" >> $LOG_FILE
+                else
+                    echo "$(date) - 无法停止 PID 为 $pid 的 xray 进程, 配置文件为 $config_name" >> $LOG_FILE
+                fi
+            else
+                echo "$(date) - PID 为 $pid 的 xray 进程不存在, 配置文件为 $config_name" >> $LOG_FILE
+            fi
+        done
+        sed -i "/ $config_name/d" "$PID_FILE"
     else
         echo "$(date) - 未找到正在运行的 xray 进程, 配置文件为 $config_name" >> $LOG_FILE
     fi
