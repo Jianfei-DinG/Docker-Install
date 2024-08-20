@@ -42,3 +42,8 @@ jobs:
     uses: ./.github/workflows/.build-and-push-xray.yml
     needs: build-frp
     secrets: inherit
+
+  build-Xray-alpine:  # 下面是xray
+    uses: ./.github/workflows/.build-xray-alpine.yml
+    needs: build-frp
+    secrets: inherit
