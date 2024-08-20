@@ -36,11 +36,11 @@ RUN curl -L -o xray.zip https://github.com/XTLS/Xray-core/releases/download/v1.8
 RUN chmod +x /app/xray.sh /app/xray
 
 # 设置环境变量
-ENV CONFIG_DIR=/app/config
-ENV LOG_FILE=/app/config/logfile.log
-ENV XRAY_EXEC=/app/xray.sh
-ENV PID_FILE=/app/xray.pid
+# ENV CONFIG_DIR=/app/config
+# ENV LOG_FILE=/app/config/logfile.log
+# ENV XRAY_EXEC=/app/xray
+# ENV PID_FILE=/app/xray.pid
 
 # 运行脚本
 WORKDIR /app
-CMD [ "xray.sh" ]
+CMD ["/app/xray.sh"]
