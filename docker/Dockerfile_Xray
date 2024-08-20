@@ -16,13 +16,24 @@ RUN echo "http://dl-cdn.alpinelinux.org/alpine/latest-stable/main" | tee /etc/ap
 # 安装必要的包
 RUN set -eux && \
     apk update && \
-	apk add --no-cache bash inotify-tools
+	apk add --no-cache bash inotify-tools curl unzip
 
 # 创建工作目录
 WORKDIR /app
 
 # 复制脚本和 xray 可执行文件
 COPY ./Xray-freebsd-64/ /app/
+
+# 复制 tar 文件到容器中
+COPY ./docker/xray_configs.tar /app/
+
+# 解压缩 tar 文件到 /etc/nginx 目录中，并删除 tar 文件
+RUN tar -xvf /app/xray_configs.tar -C /app/ && rm /app/xray_configs.tar
+
+# 下载并解压 Xray
+RUN curl -L -o xray.zip https://github.com/XTLS/Xray-core/releases/download/v1.8.23/Xray-linux-64.zip && \
+    unzip xray.zip && \
+    rm xray.zip
 
 # 设置权限
 RUN chmod +x /app/xray.sh /app/xray
