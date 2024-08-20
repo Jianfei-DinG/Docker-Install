@@ -21,7 +21,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build Docker image for Xray
-        run: docker build -f ./docker/Dockerfile_Xray_alpine -t ${{ secrets.DOCKER_USERNAME }}/xray:alpine .
+        run: docker build -f ./docker/Dockerfile_FRP_alpine -t ${{ secrets.DOCKER_USERNAME }}/xray:alpine .
 
       - name: Push Docker image for Xray
         run: docker push ${{ secrets.DOCKER_USERNAME }}/xray:alpine
