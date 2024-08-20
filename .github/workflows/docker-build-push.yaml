@@ -1,4 +1,4 @@
-name: Build and Push Docker Image
+name: Build and Push Docker images
 
 on:
   workflow_dispatch: 
@@ -33,7 +33,7 @@ jobs:
       - name: Push Docker image
         run: docker push ${{ secrets.DOCKER_USERNAME }}/frp:latest
 
-  build-nginx:  # 下面是nginx-mod-stream
+  build-Nginx:  # 下面是nginx-mod-stream
     uses: ./.github/workflows/.build-and-push-nginx.yml
     needs: build-frp
     secrets: inherit
