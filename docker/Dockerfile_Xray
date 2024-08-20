@@ -42,4 +42,5 @@ ENV XRAY_EXEC=/app/xray
 ENV PID_FILE=/app/xray.pid
 
 # 运行脚本
-CMD ["/app/xray.sh"]
+WORKDIR /app
+CMD [ "xray.sh" ]
