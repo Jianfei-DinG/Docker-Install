@@ -19,6 +19,8 @@ RUN set -eux && \
     apk add --no-cache bash inotify-tools curl unzip tar
 
 # 创建工作目录
+RUN adduser -D appuser
+USER appuser
 WORKDIR /app
 
 # 复制 tar 文件到容器中
@@ -36,10 +38,10 @@ RUN curl -L -o xray.zip https://github.com/XTLS/Xray-core/releases/download/v1.8
 RUN chmod +x /app/xray.sh /app/xray
 
 # 设置环境变量
-# ENV CONFIG_DIR=/app/config
-# ENV LOG_FILE=/app/config/logfile.log
-# ENV XRAY_EXEC=/app/xray
-# ENV PID_FILE=/app/xray.pid
+ENV CONFIG_DIR="/app/config"
+ENV LOG_FILE="/app/config/logfile.log"
+ENV XRAY_EXEC="/app/xray"
+ENV PID_FILE="/app/xray.pid"
 
 # 运行脚本
 WORKDIR /app
