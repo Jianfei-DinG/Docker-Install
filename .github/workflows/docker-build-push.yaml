@@ -40,5 +40,5 @@ jobs:
 
   build-Xray:  # 下面是xray
     uses: ./.github/workflows/.build-and-push-xray.yml
-    needs: build-xray
+    needs: build-Xray
     secrets: inherit
