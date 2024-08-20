@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM ubuntu:latest
 LABEL maintainer="snowdream <Jianfei@hub.cn.com>"
 
 # 设置时区为上海
