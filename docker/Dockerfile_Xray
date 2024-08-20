@@ -1,0 +1,37 @@
+FROM alpine:latest
+
+LABEL maintainer="snowdream <Jianfei@hub.cn.com>"
+
+# 设置时区为上海
+RUN set -eu && \
+    apk add --no-cache tzdata && \
+    cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
+    echo "Asia/Shanghai" > /etc/timezone && \
+    apk del tzdata
+
+# 覆盖 /etc/apk/repositories 文件内容
+RUN echo "http://dl-cdn.alpinelinux.org/alpine/latest-stable/main" | tee /etc/apk/repositories && \
+    echo "http://dl-cdn.alpinelinux.org/alpine/edge/community" | tee -a /etc/apk/repositories 
+
+# 安装必要的包
+RUN set -eux && \
+    apk update && \
+	apk add --no-cache bash inotify-tools
+
+# 创建工作目录
+WORKDIR /app
+
+# 复制脚本和 xray 可执行文件
+COPY ./Xray-freebsd-64/ /app/
+
+# 设置权限
+RUN chmod +x /app/xray.sh /app/xray
+
+# 设置环境变量
+ENV CONFIG_DIR=/app/config
+ENV LOG_FILE=/app/config/logfile.log
+ENV XRAY_EXEC=/app/xray
+ENV PID_FILE=/app/xray.pid
+
+# 运行脚本
+CMD ["/app/xray.sh"]
