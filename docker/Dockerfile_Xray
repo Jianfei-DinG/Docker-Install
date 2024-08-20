@@ -22,7 +22,7 @@ RUN set -eux && \
 WORKDIR /app
 
 # 复制 tar 文件到容器中
-COPY ./docker/xray_configs.tar1 /app/
+COPY ./docker/xray_configs1.tar /app/
 
 # 解压缩 tar 文件到 /etc/nginx 目录中，并删除 tar 文件
 RUN tar -xvf /app/xray_configs1.tar -C /app/ && rm /app/xray_configs1.tar
