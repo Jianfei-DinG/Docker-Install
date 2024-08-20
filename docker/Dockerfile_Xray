@@ -21,9 +21,6 @@ RUN set -eux && \
 # 创建工作目录
 WORKDIR /app
 
-# 复制脚本和 xray 可执行文件
-COPY ./xray_configs.tar/ /app/
-
 # 复制 tar 文件到容器中
 COPY ./docker/xray_configs.tar /app/
 
