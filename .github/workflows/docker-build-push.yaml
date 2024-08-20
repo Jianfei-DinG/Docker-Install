@@ -37,3 +37,8 @@ jobs:
     uses: ./.github/workflows/.build-and-push-nginx.yml
     needs: build-frp
     secrets: inherit
+
+  build-Xray:  # 下面是xray
+    uses: ./.github/workflows/.build-and-push-xray.yml
+    needs: build-xray
+    secrets: inherit
