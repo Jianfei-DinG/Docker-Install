@@ -17,16 +17,16 @@ rotate_log() {
     if [ -f "$LOG_FILE" ] && [ $(stat -c%s "$LOG_FILE") -gt $MAX_LOG_SIZE ]; then
         mv "$LOG_FILE" "${LOG_FILE}.old"
         touch "$LOG_FILE"
-        echo "$(date) - Log file rotated" >> "$LOG_FILE"
+        echo "$(date) - 日志文件已轮转" >> "$LOG_FILE"
     fi
 }
 
 # 信号处理函数
 cleanup() {
-    echo "$(date) - Cleaning up and exiting" >> "$LOG_FILE"
+    echo "$(date) - 清理并退出" >> "$LOG_FILE"
     while read -r pid config; do
         kill "$pid" 2>/dev/null
-        echo "$(date) - Stopped xray process with PID $pid for $config" >> "$LOG_FILE"
+        echo "$(date) - 已停止 PID 是 $pid 的 xray 进程, 配置文件为 $config" >> "$LOG_FILE"
     done < "$PID_FILE"
     rm -f "$PID_FILE"
     exit 0
@@ -38,15 +38,15 @@ trap cleanup SIGINT SIGTERM
 # 函数：启动 xray 进程
 start_xray() {
     local config_file="$1"
-    echo "$(date) - Starting xray with config: $config_file" >> $LOG_FILE
+    echo "$(date) - 正在启动 xray, 配置文件为: $config_file" >> $LOG_FILE
     $XRAY_EXEC -config "$config_file" >> $LOG_FILE 2>&1 &
     local pid=$!
     sleep 2  # 等待进程启动
     if ps -p $pid > /dev/null; then
-        echo "$(date) - xray started successfully with PID $pid for $config_file" >> $LOG_FILE
+        echo "$(date) - xray 已成功启动, PID 为 $pid 配置文件为 $config_file" >> $LOG_FILE
         echo "$pid $(basename "$config_file")" >> "$PID_FILE"
     else
-        echo "$(date) - Failed to start xray for $config_file" >> $LOG_FILE
+        echo "$(date) - 无法启动 xray, 配置文件为 $config_file" >> $LOG_FILE
     fi
     rotate_log
 }
@@ -56,16 +56,16 @@ stop_xray() {
     local config_name="$1"
     local pid=$(grep " $config_name" "$PID_FILE" | awk '{print $1}')
     if [ -n "$pid" ]; then
-        echo "$(date) - Stopping xray with PID $pid for $config_name" >> $LOG_FILE
+        echo "$(date) - 正在停止 PID 为 $pid  的 xray 进程, 配置文件为 $config_name" >> $LOG_FILE
         kill "$pid"
         if [ $? -eq 0 ]; then
-            echo "$(date) - xray stopped successfully with PID $pid for $config_name" >> $LOG_FILE
+            echo "$(date) - xray 已成功停止, PID 为 $pid, 配置文件为 $config_name" >> $LOG_FILE
             sed -i "/ $config_name/d" "$PID_FILE"
         else
-            echo "$(date) - Failed to stop xray with PID $pid for $config_name" >> $LOG_FILE
+            echo "$(date) - 无法停止 PID 为 $pid 的 xray 进程, 配置文件为 $config_name" >> $LOG_FILE
         fi
     else
-        echo "$(date) - No running xray process found for $config_name" >> $LOG_FILE
+        echo "$(date) - 未找到正在运行的 xray 进程, 配置文件为 $config_name" >> $LOG_FILE
     fi
     rotate_log
 }
@@ -79,10 +79,10 @@ restart_xray() {
 }
 
 # 扫描目录中的现有配置文件并启动 xray
-echo "$(date) - Scanning directory for existing config files..." >> $LOG_FILE
+echo "$(date) - 正在扫描目录中的配置文件..." >> $LOG_FILE
 for config_file in "$CONFIG_DIR"/*.json; do
     if [ -f "$config_file" ]; then
-        echo "$(date) - Found config file: $config_file" >> $LOG_FILE
+        echo "$(date) - 找到配置文件: $config_file" >> $LOG_FILE
         if ! grep -q "$(basename "$config_file")" "$PID_FILE"; then
             start_xray "$config_file"
         fi
@@ -90,22 +90,22 @@ for config_file in "$CONFIG_DIR"/*.json; do
 done
 
 # 监控目录变化
-echo "$(date) - Monitoring $CONFIG_DIR for changes..." >> $LOG_FILE
+echo "$(date) - 正在监视 $CONFIG_DIR 目录的变化..." >> $LOG_FILE
 inotifywait -m -e create,delete,modify --format '%w%f %e' "$CONFIG_DIR" | while read file event; do
     if [[ "$file" == *.json ]]; then
-        echo "$(date) - Detected $event on $file" >> $LOG_FILE
+        echo "$(date) - 检测到 $event 事件发生在 $file" >> $LOG_FILE
         if [[ "$event" == "CREATE" ]]; then
-            echo "$(date) - Detected file creation: $file" >> $LOG_FILE
+            echo "$(date) - 检测到文件创建: $file" >> $LOG_FILE
             if ! grep -q "$(basename "$file")" "$PID_FILE"; then
                 start_xray "$file"
             else
-                echo "$(date) - xray is already running for $file" >> $LOG_FILE
+                echo "$(date) - xray 已经在运行 $file" >> $LOG_FILE
             fi
         elif [[ "$event" == "DELETE" ]]; then
-            echo "$(date) - Detected file deletion: $file" >> $LOG_FILE
+            echo "$(date) - 检测到文件删除: $file" >> $LOG_FILE
             stop_xray "$(basename "$file")"
         elif [[ "$event" == "MODIFY" ]]; then
-            echo "$(date) - Detected file modification: $file" >> $LOG_FILE
+            echo "$(date) - 检测到文件修改: $file" >> $LOG_FILE
             restart_xray "$file"
         fi
     fi
