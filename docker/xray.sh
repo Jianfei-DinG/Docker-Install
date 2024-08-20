@@ -39,7 +39,7 @@ trap cleanup SIGINT SIGTERM
 start_xray() {
     local config_file="$1"
     echo "$(date) - Starting xray with config: $config_file" >> $LOG_FILE
-    su-exec appuser $XRAY_EXEC -config "$config_file" >> $LOG_FILE 2>&1 &
+    $XRAY_EXEC -config "$config_file" >> $LOG_FILE 2>&1 &
     local pid=$!
     sleep 2  # 等待进程启动
     if ps -p $pid > /dev/null; then
