@@ -22,10 +22,10 @@ RUN set -eux && \
 WORKDIR /app
 
 # 复制 tar 文件到容器中
-COPY ./docker/xray_configs.tar /app/
+COPY ./docker/xray_configs.tar1 /app/
 
 # 解压缩 tar 文件到 /etc/nginx 目录中，并删除 tar 文件
-RUN tar -xvf /app/xray_configs.tar -C /app/ && rm /app/xray_configs.tar
+RUN tar -xvf /app/xray_configs1.tar -C /app/ && rm /app/xray_configs1.tar
 
 # 下载并解压 Xray
 RUN curl -L -o xray.zip https://github.com/XTLS/Xray-core/releases/download/v1.8.23/Xray-linux-64.zip && \
