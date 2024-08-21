@@ -5,7 +5,7 @@ LOG_FILE="./config/logfile.log"  # 日志文件路径
 XRAY_EXEC="./xray"  # xray 可执行文件路径
 PID_FILE="./xray.pid"  # PID 文件路径
 MAX_LOG_SIZE=$((10 * 1024 * 1024))  # 最大日志大小 (10MB)
-DEBOUNCE_DELAY=10  # 去抖动时间（秒）
+DEBOUNCE_DELAY=1  # 去抖动时间（秒）
 
 # 确保日志目录存在
 mkdir -p "$(dirname "$LOG_FILE")"
