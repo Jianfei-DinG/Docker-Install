@@ -5,6 +5,7 @@ LOG_FILE="./config/logfile.log"  # 日志文件路径
 XRAY_EXEC="./xray"  # xray 可执行文件路径
 PID_FILE="./xray.pid"  # PID 文件路径
 MAX_LOG_SIZE=$((10 * 1024 * 1024))  # 最大日志大小 (10MB)
+DEBOUNCE_DELAY=10  # 去抖动时间（秒）
 
 # 确保日志目录存在
 mkdir -p "$(dirname "$LOG_FILE")"
@@ -45,7 +46,7 @@ start_xray() {
     echo "$(date) - 正在启动 xray, 配置文件为: $config_file" >> $LOG_FILE
 
     # 等待文件稳定
-    sleep 5  # 等待 5 秒
+    sleep 0.1  # 等待 5 秒
 
     # 检查文件是否稳定
     local initial_size=$(stat -c%s "$config_file")
@@ -116,7 +117,9 @@ done
 # 监控目录变化
 echo "$(date) - 正在监视 $CONFIG_DIR 目录的变化..." >> $LOG_FILE
 inotifywait -m -e create,delete,modify --format '%w%f %e' "$CONFIG_DIR" | while read file event; do
-    if [[ "$file" == *.json ]]; then
+    if [[ "$file" == *.json && "$file" != "$LOG_FILE" ]]; then  # 排除日志文件
+        # 使用去抖动机制处理文件修改事件
+        sleep $DEBOUNCE_DELAY
         echo "$(date) - 检测到 $event 事件发生在 $file" >> $LOG_FILE
         if [[ "$event" == "CREATE" ]]; then
             echo "$(date) - 检测到文件创建: $file" >> $LOG_FILE
