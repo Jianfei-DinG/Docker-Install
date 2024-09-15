@@ -31,5 +31,9 @@ RUN tar -xvf nps_amd64_server.tar && \
 # 设置执行权限
 RUN chmod +x /app/nps
 
+
+VOLUME [ "/nps/conf" ]
+WORKDIR /nps
+
 # 指定启动命令
-CMD ["/app/nps"]
+CMD [ "nps" ]
