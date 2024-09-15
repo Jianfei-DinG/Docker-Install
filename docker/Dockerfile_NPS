@@ -13,7 +13,7 @@ RUN set -eu && \
 RUN echo "http://dl-cdn.alpinelinux.org/alpine/latest-stable/main" | tee /etc/apk/repositories && \
     echo "http://dl-cdn.alpinelinux.org/alpine/edge/community" | tee -a /etc/apk/repositories 
 
-# 安装 frps
+# 安装必要的软件
 RUN set -eux && \
     apk update && \
     apk add --no-cache bash inotify-tools curl unzip tar
@@ -24,11 +24,12 @@ WORKDIR /app
 # 复制 tar 文件到容器中
 COPY ./docker/nps_amd64_server.tar /app/
 
-# 解压
-RUN tar -xvf nps_amd64_server.tar
+# 解压文件
+RUN tar -xvf nps_amd64_server.tar && \
+    rm nps_amd64_server.tar  # 解压后删除 tar 文件
 
-# 设置权限
+# 设置执行权限
 RUN chmod +x /app/nps
 
 # 指定启动命令
-CMD ["/nps"]
+CMD ["/app/nps"]
