@@ -33,7 +33,6 @@ RUN chmod +x /app/nps
 
 
 VOLUME [ "/nps/conf" ]
-WORKDIR /nps
+WORKDIR /app
+CMD ["nps"]
 
-# 指定启动命令
-CMD [ "nps" ]
