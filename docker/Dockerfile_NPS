@@ -31,8 +31,14 @@ RUN tar -xvf nps_amd64_server.tar && \
 # 设置执行权限
 RUN chmod +x /app/nps
 
+# 设置环境变量
+ENV PATH="/app:${PATH}"
 
+# 定义数据卷
 VOLUME [ "/nps/conf" ]
-WORKDIR /app
-CMD ["nps"]
 
+# 设置工作目录
+WORKDIR /app
+
+# 启动命令
+CMD ["nps"]
