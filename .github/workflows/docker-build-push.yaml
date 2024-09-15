@@ -50,5 +50,5 @@ jobs:
 
   build-nps-alpine:  # 下面是nps
     uses: ./.github/workflows/.build-and-push-nps.yml
-    needs: build-nps
+    needs: build-frp
     secrets: inherit
