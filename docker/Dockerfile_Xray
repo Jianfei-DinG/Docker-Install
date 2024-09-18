@@ -19,11 +19,6 @@ RUN apt-get update && \
 # 创建工作目录
 WORKDIR /app
 
-# 下载并解压 Xray
-# RUN curl -L -o xray.zip https://github.com/XTLS/Xray-core/releases/download/v1.8.23/Xray-linux-64.zip && \
-#     unzip -o xray.zip && \
-#     rm xray.zip
-
 # 下载最新版本的 Xray
 RUN curl -s https://api.github.com/repos/XTLS/Xray-core/releases/latest \
     | grep "browser_download_url.*Xray-linux-64.zip" \
@@ -31,6 +26,16 @@ RUN curl -s https://api.github.com/repos/XTLS/Xray-core/releases/latest \
     | xargs curl -L -o xray.zip && \
     unzip -o xray.zip && \
     rm xray.zip
+
+# 下载最新版本的 geoip.dat 和 geosite.dat
+RUN curl -s https://api.github.com/repos/Loyalsoldier/v2ray-rules-dat/releases/latest \
+    | grep "browser_download_url.*geoip.dat" \
+    | cut -d '"' -f 4 \
+    | xargs curl -L -o geoip.dat && \
+    curl -s https://api.github.com/repos/Loyalsoldier/v2ray-rules-dat/releases/latest \
+    | grep "browser_download_url.*geosite.dat" \
+    | cut -d '"' -f 4 \
+    | xargs curl -L -o geosite.dat
 
 # 复制 xray.sh 脚本到容器
 COPY ./docker/xray.sh /app/
@@ -46,5 +51,4 @@ ENV XRAY_EXEC="/app/xray"
 ENV PID_FILE="/app/xray.pid"
 
 # 运行脚本
-# CMD ["/app/xray.sh"]
 CMD ["xray.sh"]
