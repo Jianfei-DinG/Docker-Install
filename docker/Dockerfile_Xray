@@ -20,7 +20,15 @@ RUN apt-get update && \
 WORKDIR /app
 
 # 下载并解压 Xray
-RUN curl -L -o xray.zip https://github.com/XTLS/Xray-core/releases/download/v1.8.23/Xray-linux-64.zip && \
+# RUN curl -L -o xray.zip https://github.com/XTLS/Xray-core/releases/download/v1.8.23/Xray-linux-64.zip && \
+#     unzip -o xray.zip && \
+#     rm xray.zip
+
+# 下载最新版本的 Xray
+RUN curl -s https://api.github.com/repos/XTLS/Xray-core/releases/latest \
+    | grep "browser_download_url.*Xray-linux-64.zip" \
+    | cut -d '"' -f 4 \
+    | xargs curl -L -o xray.zip && \
     unzip -o xray.zip && \
     rm xray.zip
 
