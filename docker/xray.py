@@ -14,7 +14,7 @@ CONFIG_DIR = "./config"
 LOG_FILE = "./config/logfile.log"
 XRAY_EXEC = "./xray"
 PID_FILE = "./xray.pid"
-MAX_LOG_SIZE = 10 * 1024 * 1024  # 10MB
+MAX_LOG_SIZE = 1 * 1024 * 1024  # 1MB
 DEBOUNCE_DELAY = 2  # 秒
 
 # 设置日志
