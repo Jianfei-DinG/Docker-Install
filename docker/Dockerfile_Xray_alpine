@@ -16,13 +16,7 @@ RUN echo "http://dl-cdn.alpinelinux.org/alpine/latest-stable/main" | tee /etc/ap
 # 安装必要的包，包括 Python 和 pip
 RUN set -eux && \
     apk update && \
-    apk add --no-cache python3 py3-pip bash inotify-tools curl unzip tar
-
-# 输出 Python 和 pip 版本信息
-RUN python3 --version && pip3 --version
-
-# 安装 watchdog
-RUN pip3 install --no-cache-dir watchdog
+    apk add --no-cache python3 py3-watchdog py3-pip bash inotify-tools curl unzip tar
 
 # 创建工作目录
 WORKDIR /app
