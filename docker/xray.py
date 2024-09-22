@@ -15,7 +15,7 @@ LOG_FILE = "./config/logfile.log"
 XRAY_EXEC = "./xray-x"
 PID_FILE = "./xray.pid"
 MAX_LOG_SIZE = 1 * 1024 * 1024  # 1MB
-DEBOUNCE_DELAY = 2  # 秒
+DEBOUNCE_DELAY = 1  # 秒
 
 # 设置日志
 logging.basicConfig(filename=LOG_FILE, level=logging.INFO,
