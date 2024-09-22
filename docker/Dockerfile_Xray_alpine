@@ -6,8 +6,6 @@ RUN apk add --no-cache curl unzip && \
     curl -s https://api.github.com/repos/XTLS/Xray-core/releases/latest | grep "browser_download_url.*Xray-linux-64.zip" | cut -d '"' -f 4 | xargs curl -L -o xray.zip && \
     unzip -j xray.zip "xray" && \
     rm xray.zip && \
-    rm geoip.dat && \
-    rm geosite.dat && \
     curl -s https://api.github.com/repos/Loyalsoldier/v2ray-rules-dat/releases/latest | grep "browser_download_url.*geoip.dat" | cut -d '"' -f 4 | xargs curl -L -o geoip.dat && \
     curl -s https://api.github.com/repos/Loyalsoldier/v2ray-rules-dat/releases/latest | grep "browser_download_url.*geosite.dat" | cut -d '"' -f 4 | xargs curl -L -o geosite.dat
 
