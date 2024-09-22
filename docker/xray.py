@@ -12,7 +12,7 @@ from threading import Timer
 
 CONFIG_DIR = "./config"
 LOG_FILE = "./config/logfile.log"
-XRAY_EXEC = "./xray"
+XRAY_EXEC = "./xray-x"
 PID_FILE = "./xray.pid"
 MAX_LOG_SIZE = 1 * 1024 * 1024  # 1MB
 DEBOUNCE_DELAY = 2  # 秒
