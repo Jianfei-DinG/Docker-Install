@@ -1,56 +1,49 @@
-FROM alpine:latest
+# 第一阶段：下载和准备文件
+FROM alpine:latest AS builder
+WORKDIR /tmp
+# 下载 Xray 和 dat 文件
+RUN apk add --no-cache curl unzip && \
+    curl -s https://api.github.com/repos/XTLS/Xray-core/releases/latest | grep "browser_download_url.*Xray-linux-64.zip" | cut -d '"' -f 4 | xargs curl -L -o xray.zip && \
+    unzip -j xray.zip "xray" && \
+    rm xray.zip && \
+    rm geoip.dat && \
+    rm geosite.dat && \
+    curl -s https://api.github.com/repos/Loyalsoldier/v2ray-rules-dat/releases/latest | grep "browser_download_url.*geoip.dat" | cut -d '"' -f 4 | xargs curl -L -o geoip.dat && \
+    curl -s https://api.github.com/repos/Loyalsoldier/v2ray-rules-dat/releases/latest | grep "browser_download_url.*geosite.dat" | cut -d '"' -f 4 | xargs curl -L -o geosite.dat
 
+# 第二阶段：构建最终镜像
+FROM alpine:latest
 LABEL maintainer="snowdream <Jianfei@hub.cn.com>"
 
-# 设置时区为上海
-RUN set -eu && \
-    apk add --no-cache tzdata && \
+# 更新软件源
+RUN echo "http://dl-cdn.alpinelinux.org/alpine/latest-stable/main" > /etc/apk/repositories && \
+    echo "http://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories
+
+# 设置时区并安装必要的包
+RUN apk update && \
+    apk add --no-cache tzdata python3 py3-watchdog py3-pip bash inotify-tools && \
     cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
     echo "Asia/Shanghai" > /etc/timezone && \
-    apk del tzdata
-
-# 覆盖 /etc/apk/repositories 文件内容
-RUN echo "http://dl-cdn.alpinelinux.org/alpine/latest-stable/main" | tee /etc/apk/repositories && \
-    echo "http://dl-cdn.alpinelinux.org/alpine/edge/community" | tee -a /etc/apk/repositories 
-
-# 安装必要的包，包括 Python 和 pip
-RUN set -eux && \
-    apk update && \
-    apk add --no-cache python3 py3-watchdog py3-pip bash inotify-tools curl unzip tar
+    apk del tzdata && \
+    rm -rf /var/cache/apk/*
 
 # 创建工作目录
 WORKDIR /app
 
-# 下载最新版本的 Xray
-RUN curl -s https://api.github.com/repos/XTLS/Xray-core/releases/latest \
-    | grep "browser_download_url.*Xray-linux-64.zip" \
-    | cut -d '"' -f 4 \
-    | xargs curl -L -o xray.zip && \
-    unzip -o xray.zip && \
-    rm xray.zip
-
-# 下载最新版本的 geoip.dat 和 geosite.dat
-RUN curl -s https://api.github.com/repos/Loyalsoldier/v2ray-rules-dat/releases/latest \
-    | grep "browser_download_url.*geoip.dat" \
-    | cut -d '"' -f 4 \
-    | xargs curl -L -o geoip.dat && \
-    curl -s https://api.github.com/repos/Loyalsoldier/v2ray-rules-dat/releases/latest \
-    | grep "browser_download_url.*geosite.dat" \
-    | cut -d '"' -f 4 \
-    | xargs curl -L -o geosite.dat
-
-# 复制 Python 脚本到容器中
+# 从builder阶段复制文件
+COPY --from=builder /tmp/xray /app/
+COPY --from=builder /tmp/geoip.dat /app/
+COPY --from=builder /tmp/geosite.dat /app/
 COPY ./docker/xray.py /app/
 
 # 设置权限
 RUN chmod +x /app/xray /app/xray.py
 
 # 设置环境变量
-ENV CONFIG_DIR="/app/config"
-ENV LOG_FILE="/app/config/logfile.log"
-ENV XRAY_EXEC="/app/xray"
-ENV PID_FILE="/app/xray.pid"
-ENV PATH="/app:${PATH}"
+ENV CONFIG_DIR="/app/config" \
+    XRAY_EXEC="/app/xray" \
+    PID_FILE="/app/xray.pid" \
+    PATH="/app:${PATH}"
 
 # 运行 Python 脚本
 CMD ["xray.py"]
