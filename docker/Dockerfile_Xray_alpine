@@ -3,7 +3,7 @@ FROM alpine:latest AS builder
 WORKDIR /tmp
 # 下载 Xray 和 dat 文件
 RUN apk add --no-cache curl unzip && \
-    curl -s https://api.github.com/repos/XTLS/Xray-core/releases/latest | grep "browser_download_url.*Xray-linux-64.zip" | cut -d '"' -f 4 | xargs curl -L -o xray.zip && \
+    curl -s https://api.github.com/repos/XTLS/Xray-core/releases | grep "browser_download_url.*Xray-linux-64.zip" | cut -d '"' -f 4 | xargs curl -L -o xray.zip && \
     unzip -j xray.zip "xray" && \
     mv xray xray-x && \
     rm xray.zip && \
