@@ -5,6 +5,7 @@ WORKDIR /tmp
 RUN apk add --no-cache curl unzip && \
     curl -s https://api.github.com/repos/XTLS/Xray-core/releases/latest | grep "browser_download_url.*Xray-linux-64.zip" | cut -d '"' -f 4 | xargs curl -L -o xray.zip && \
     unzip -j xray.zip "xray" && \
+    mv xray xray-x && \
     rm xray.zip && \
     curl -s https://api.github.com/repos/Loyalsoldier/v2ray-rules-dat/releases/latest | grep "browser_download_url.*geoip.dat" | cut -d '"' -f 4 | xargs curl -L -o geoip.dat && \
     curl -s https://api.github.com/repos/Loyalsoldier/v2ray-rules-dat/releases/latest | grep "browser_download_url.*geosite.dat" | cut -d '"' -f 4 | xargs curl -L -o geosite.dat
@@ -29,17 +30,17 @@ RUN apk update && \
 WORKDIR /app
 
 # 从builder阶段复制文件
-COPY --from=builder /tmp/xray /app/
+COPY --from=builder /tmp/xray-x /app/
 COPY --from=builder /tmp/geoip.dat /app/
 COPY --from=builder /tmp/geosite.dat /app/
 COPY ./docker/xray.py /app/
 
 # 设置权限
-RUN chmod +x /app/xray /app/xray.py
+RUN chmod +x /app/xray-x /app/xray.py
 
 # 设置环境变量
 ENV CONFIG_DIR="/app/config" \
-    XRAY_EXEC="/app/xray" \
+    XRAY_EXEC="/app/xray-x" \
     PID_FILE="/app/xray.pid" \
     PATH="/app:${PATH}"
 
