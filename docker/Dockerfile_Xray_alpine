@@ -53,4 +53,4 @@ ENV PID_FILE="/app/xray.pid"
 ENV PATH="/app:${PATH}"
 
 # 运行 Python 脚本
-CMD ["python3", "xray.py"]
+CMD ["xray.py"]
