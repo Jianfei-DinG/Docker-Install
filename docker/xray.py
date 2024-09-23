@@ -18,8 +18,13 @@ MAX_LOG_SIZE = 1 * 1024 * 1024  # 1MB
 DEBOUNCE_DELAY = 0.1  # 最佳时间是2秒
 
 # 设置日志
-logging.basicConfig(filename=LOG_FILE, level=logging.INFO,
+# logging.basicConfig(filename=LOG_FILE, level=logging.INFO,
+logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s - %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
+
+file_handler = logging.FileHandler(LOG_FILE)
+file_handler.setFormatter(logging.Formatter('%(asctime)s - %(message)s', '%Y-%m-%d %H:%M:%S'))
+logging.getLogger().addHandler(file_handler)
 
 # 确保日志目录存在
 os.makedirs(os.path.dirname(LOG_FILE), exist_ok=True)
