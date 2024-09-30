@@ -2,7 +2,7 @@
 FROM alpine:latest
 
 # 维护者信息
-LABEL maintainer="snowdream <1009721777@qq.com>"
+LABEL maintainer="snowdream <Jianfei@hub.cn.com>"
 
 # 设置时区并安装必要的包
 RUN apk update && \
@@ -23,4 +23,4 @@ RUN chmod +x /app/nginx.py
 ENV PATH="/app:${PATH}"
 
 # 启动监控和 Nginx
-CMD ["python3", "nginx.py"]
+CMD ["nginx.py"]
