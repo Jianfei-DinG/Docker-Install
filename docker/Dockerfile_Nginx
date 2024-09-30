@@ -14,7 +14,7 @@ RUN apk update && \
 WORKDIR /app
 
 # 将监控脚本复制到镜像中
-COPY ./docker/xray.py /app/
+COPY ./docker/nginx.py /app/
 
 # 确保脚本可执行
 RUN chmod +x /app/nginx.py
@@ -23,4 +23,4 @@ RUN chmod +x /app/nginx.py
 ENV PATH="/app:${PATH}"
 
 # 启动监控和 Nginx
-CMD ["python3", "/app/nginx.py"]
+CMD ["nginx.py"]
