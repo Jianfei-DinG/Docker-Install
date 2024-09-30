@@ -23,4 +23,4 @@ RUN chmod +x /app/nginx.py
 ENV PATH="/app:${PATH}"
 
 # 启动监控和 Nginx
-CMD ["nginx.py"]
+CMD ["python3", "nginx.py"]
