@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-# pip install watchdog
 import time
 import subprocess
 import sys
@@ -13,7 +11,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 class NginxEventHandler(FileSystemEventHandler):
     def __init__(self):
         self.last_reload_time = 0
-        self.reload_interval = 5  # 设置重载间隔为5秒
+        self.reload_interval = 0.1  # 设置重载间隔为5秒
 
     def on_modified(self, event):
         if event.src_path.endswith('.conf'):
