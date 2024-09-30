@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# pip install watchdog
 import time
 import subprocess
 import sys
