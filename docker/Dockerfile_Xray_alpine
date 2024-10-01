@@ -20,7 +20,7 @@ RUN echo "http://dl-cdn.alpinelinux.org/alpine/latest-stable/main" > /etc/apk/re
 
 # 设置时区并安装必要的包
 RUN apk update && \
-    apk add --no-cache tzdata python3 py3-watchdog py3-pip bash inotify-tools && \
+    apk add --no-cache tzdata python3 py3-watchdog py3-pip bash iproute2 inotify-tools && \
     cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
     echo "Asia/Shanghai" > /etc/timezone && \
     apk del tzdata && \
