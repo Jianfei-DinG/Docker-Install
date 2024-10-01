@@ -6,7 +6,7 @@ LABEL maintainer="snowdream <Jianfei@hub.cn.com>"
 
 # 设置时区并安装必要的包
 RUN apk update && \
-    apk add --no-cache nginx-mod-stream tzdata python3 py3-watchdog py3-pip bash && \
+    apk add --no-cache nginx-mod-stream tzdata python3 py3-watchdog py3-pip bash iproute2 && \
     cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
     echo "Asia/Shanghai" > /etc/timezone && \
     apk del tzdata
