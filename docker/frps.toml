@@ -1,0 +1,20 @@
+[common]
+bind_addr = "0.0.0.0"
+bindport = 7000
+kcpBindPort = 7000
+# token = "<your_token_here>"
+
+dashboard_port = 7500
+dashboard_user = "admin"
+dashboard_pwd = "admin"
+tls_only = true
+
+log_max_days = 3
+allow_ports = "*"  # 允许所有端口
+vhost_http_port = 80
+vhost_https_port = 443
+tcp_mux = true
+heartbeat_timeout = 2400
+
+log_file = "frps.log"
+log_level = "info"
