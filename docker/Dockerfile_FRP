@@ -4,7 +4,7 @@ LABEL maintainer="snowdream <1009721777@qq.com>"
 
 # 设置时区为上海
 RUN set -eu && \
-    apk add --no-cache tzdata && \
+    apk add --no-cache tzdata frp && \
     cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
     echo "Asia/Shanghai" > /etc/timezone && \
     apk del tzdata
@@ -13,12 +13,9 @@ RUN set -eu && \
 RUN echo "http://dl-cdn.alpinelinux.org/alpine/latest-stable/main" | tee /etc/apk/repositories && \
     echo "http://dl-cdn.alpinelinux.org/alpine/edge/community" | tee -a /etc/apk/repositories 
 
-# 安装 frps
-RUN set -eux && \
-    apk update && \
-    apk add --no-cache frp
+cps
 
-WORKDIR /
+WORKDIR /etc/frp/
 
 # 指定启动命令
 CMD ["frps"]
