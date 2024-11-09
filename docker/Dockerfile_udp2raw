@@ -50,7 +50,7 @@ VOLUME ["/etc/udp2raw"]
 # 设置简化后的入口点
 ENTRYPOINT ["udp_tcp"]
 
-
+# docker build --no-cache --progress=plain -t udp2raw .
 # docker run -d --name udp2raw --network host -v /etc/udp2raw/config:/etc/udp2raw --restart always udp2raw
 # 将额外文件打包进单一可执行文件
 # pyinstaller --onefile main.py \
