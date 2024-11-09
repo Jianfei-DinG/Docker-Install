@@ -52,4 +52,10 @@ ENTRYPOINT ["udp_tcp"]
 
 
 # docker run -d --name udp2raw --network host -v /etc/udp2raw/config:/etc/udp2raw --restart always udp2raw
+# 将额外文件打包进单一可执行文件
+# pyinstaller --onefile main.py \
+#     --add-data "static/index.html:static" \
+#    --add-data "static/style.css:static" \
+#     --add-data "static/script.js:static" \
+#     --add-data "binaries/tool.bin:binaries"
 
