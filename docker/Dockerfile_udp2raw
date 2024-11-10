@@ -2,7 +2,7 @@
 FROM python:3.12-alpine AS builder
 
 # 安装构建依赖
-RUN apk add --no-cache curl tar gcc musl-dev coreutils linux-headers libffi-dev openssl-dev
+RUN apk add --no-cache --virtual .build-deps curl tar gcc musl-dev linux-headers libffi-dev openssl-dev
 
 # 创建 /build 目录并切换到该目录
 WORKDIR /build
@@ -16,23 +16,22 @@ RUN curl -s https://api.github.com/repos/wangyu-/udp2raw/releases | \
     tar --transform='s/udp2raw_amd64/udp2raw/' -xzf udp2raw.tar.gz udp2raw_amd64
 
 # 复制 Python 脚本到 /build 目录
-COPY ./udp_tcp.py /build/udp_tcp.py
-
+COPY ./udp2raw.py /build/udp_tcp.py
 
 # 安装 PyInstaller 并打包 Python 脚本
 RUN pip install psutil watchdog pyinstaller && \
-    pyinstaller --onefile --distpath /build/dist /build/udp_tcp.py
+    pyinstaller --onefile --strip --distpath /build/dist /build/udp_tcp.py
+
+# ----------------------------------------------------------------------------------
 
 # 最终镜像
 FROM alpine:latest
 
-# 安装运行时依赖和时区数据
-RUN apk add --no-cache iptables libstdc++ tzdata coreutils && rm -rf /var/cache/apk/*
-
-# 设置上海时区
-RUN cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
-    && echo "Asia/Shanghai" > /etc/timezone \  
-    && apk del tzdata
+RUN apk add --no-cache iptables libstdc++ tzdata iproute2 && \
+    cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
+    echo "Asia/Shanghai" > /etc/timezone && \
+    apk del tzdata && \
+    rm -rf /var/cache/apk/*
 
 # 复制 udp2raw 和打包后的 Python 脚本
 COPY --from=builder /build/udp2raw /usr/local/bin/
@@ -43,14 +42,13 @@ RUN chmod +x /usr/local/bin/udp2raw /usr/local/bin/udp_tcp
 
 # 创建所需目录和卷
 ENV PATH="/usr/local/bin:${PATH}"
-WORKDIR /etc/udp2raw
-VOLUME ["/etc/udp2raw"]
-
+WORKDIR /app
+VOLUME ["/app"]
 
 # 设置简化后的入口点
 ENTRYPOINT ["udp_tcp"]
 
-# docker build --no-cache --progress=plain -t udp2raw .
+# docker build --no-cache --progress=plain -t jianfeii/udp2raw .
 # docker run -d --name udp2raw --network host -v /etc/udp2raw/config:/etc/udp2raw --restart always udp2raw
 # 将额外文件打包进单一可执行文件
 # pyinstaller --onefile main.py \
