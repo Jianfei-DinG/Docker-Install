@@ -1,20 +1,54 @@
-[common]
-bind_addr = "0.0.0.0"
-bindport = 7000
-kcpBindPort = 7000
-# token = "<your_token_here>"
+# ==================================================
+# FRP 服务端配置 (frps.toml)
+# ==================================================
 
-dashboard_port = 7500
-dashboard_user = "admin"
-dashboard_pwd = "admin"
-tls_only = true
+# ==================== 基础监听配置 ====================
+bindAddr = "0.0.0.0"      # 监听所有网络接口
+bindPort = 7000           # FRP 主连接端口
+kcpBindPort = 7000        # KCP 协议端口（可选）
 
-log_max_days = 3
-allow_ports = "*"  # 允许所有端口
-vhost_http_port = 80
-vhost_https_port = 443
-tcp_mux = true
-heartbeat_timeout = 2400
+# ==================== 安全认证配置 ====================
+auth.method = "token"     # 认证方式: token / oidc
+auth.token = "<your_token_here>"  # 客户端连接令牌
 
-log_file = "frps.log"
-log_level = "info"
+# ==================== 传输层配置 ====================
+transport.tls.force = false        # 是否强制 TLS 连接
+transport.maxPoolCount = 10        # 每客户端最大连接池数
+transport.heartbeatTimeout = 0     # 心跳超时时间(秒)，0=默认值
+
+# TLS 证书配置（如需启用）
+# transport.tls.certFile = "server.crt"
+# transport.tls.keyFile = "server.key"
+# transport.tls.trustedCaFile = "ca.crt"
+
+# ==================== Web 服务配置 ====================
+vhostHTTPPort = 80        # HTTP 虚拟主机端口
+vhostHTTPSPort = 443      # HTTPS 虚拟主机端口
+# subDomainHost = "sou.onl" # 子域名主机（需取消注释并配置）
+
+# ==================== 管理面板配置 ====================
+webServer.addr = "0.0.0.0"        # 面板监听地址
+webServer.port = 7500             # 面板端口
+webServer.user = "admin"          # 登录用户名
+webServer.password = "admin"      # 登录密码
+webServer.pprofEnable = false     # 性能分析（生产环境建议关闭）
+
+# HTTPS 面板（可选）
+# webServer.tls.certFile = "server.crt"
+# webServer.tls.keyFile = "server.key"
+# webServer.assetsDir = "./static"  # 静态资源目录（调试用）
+
+# ==================== 端口控制配置 ====================
+allowPorts = [
+  { start = 2000, end = 3600 },   # 端口段1
+  { single = 21 },                # 单个端口
+  { start = 4000, end = 50000 }   # 端口段2
+]
+
+maxPortsPerClient = 0             # 单客户端最大端口数，0=无限制
+
+# ==================== 日志配置 ====================
+log.to = "./frps.log"             # 日志文件路径
+log.level = "info"                # 日志级别: trace/debug/info/warn/error
+log.maxDays = 3                   # 日志保留天数
+log.disablePrintColor = false     # 控制台输出是否禁用颜色
